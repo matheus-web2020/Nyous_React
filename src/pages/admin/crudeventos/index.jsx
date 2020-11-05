@@ -1,11 +1,9 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Menu from '../../../components/menu';
 import Rodape from '../../../components/rodape';
 
 
-
-const DashBoard = () => {
-
+const CrudEventos = () => {
          return(
              <div>
                  <Menu/>
@@ -15,4 +13,4 @@ const DashBoard = () => {
          )
 }
 
-export default DashBoard  
+export default CrudEventos

@@ -7,13 +7,44 @@ import Cadastrar from './pages/cadastrar';
 import Eventos from './pages/eventos';
 import NaoEncontrada from './pages/naoencontrada';
 import reportWebVitals from './reportWebVitals';
-
+import CrudCategorias from './pages/admin/crudcategorias';
+import CrudEventos from './pages/admin/crudeventos';
+import DashBoard from './pages/admin/dashboard';
+import jwt_decode from 'jwt-decode';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import DashBoard from './pages/admin/dashboard';
 
+const RotaPrivada = ({component : Component, ...rest }) => (
+  <Route
+     {...rest}
+     render = {
+       props => 
+       localStorage.getItem('token-nyous-tarde') === null ?
+       <Redirect  to={{pathname :'/login', state : {from : props.location}}} /> :
+
+       <Component {...props}/>
+     }
+
+  
+  />
+)
+
+const RotaPrivadaAdmin = ({component : Component, ...rest }) => (
+  <Route
+     {...rest}
+     render = {
+       props => 
+       localStorage.getItem('token-nyous-tarde') !== null && jwt_decode(localStorage.getItem('token-nyous-tarde')).role !== 'Admin' ?
+       <Redirect  to={{pathname :'/login', state : {from : props.location}}} /> :
+
+       <Component {...props}/>
+     }
+
+  
+  />
+)
 
 const routing = (
   <Router>
@@ -21,8 +52,10 @@ const routing = (
       <Route exact path='/' component={Home}/>
       <Route path='/login' component={Login}/>
       <Route path='/cadastrar' component={Cadastrar}/>
-      <Route path='/eventos' component={Eventos}/>
-      <Route path='/admin/dashboard' component={DashBoard}/>
+      <RoutaPrivada path='/eventos' component={Eventos}/>
+      <RoutaPrivadaAdmin path='/admin/dashboard' component={DashBoard}/>
+      <RoutaPrivadaAdmin path='/admin/categorias' component={CrudCategorias}/>
+      <RoutaPrivadaAdmin path='/admin/eventos' component={CrudEventos}/>
       <Route component={NaoEncontrada}/>
     </Switch>
   </Router>
